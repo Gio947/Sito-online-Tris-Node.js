@@ -14,10 +14,10 @@ var server = app.listen(3000, function(){
 //test commit
 //database connection
 var connection = mysql.createConnection({
-    host: 'mysql-loca.alwaysdata.net',
-    user: 'loca',
-    password: 'prova98',
-    database: 'loca_tictactoe'
+    host: 'mysql-trisonline.alwaysdata.net',
+    user: '258797_gg',
+    password: 'GabrieleGiovanni!1',
+    database: 'trisonline_esame'
 });
 
 //Routing in particolare quando avviene una richiesta get si risponde con la pagina html
