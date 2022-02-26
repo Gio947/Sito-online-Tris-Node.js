@@ -1,0 +1,72 @@
+body {
+    background-color: slategray;
+    /*color: #FFFFFF;*/
+    font-family: Arial;
+    font-weight: lighter;
+    text-align: center;
+}
+
+.header {
+    font-size: 70px;
+    color: #ffffff;
+}
+
+.h4Game{
+    color: #ffffff;
+}
+
+.tableGame {
+    border-spacing: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.cell {
+    font-weight: 900;
+    font-size: 100px;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #268;
+    color: white;
+    /*opacity: 0.8;*/
+    transition-duration: 0.4s;
+}
+
+.modal-container {
+    position: absolute;
+    left: 50%;
+    top: 375px;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.modal {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #DDD;
+    padding: 20px 10px 30px 10px;
+    width: 350px;
+}
+
+.modal-title {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.button-area span {
+    font-family: Raleway;
+    display: inline-block;
+    font-size: 50px;
+    font-weight: 900;
+    background-color: #333;
+    margin: 0px 20px 0px 20px;
+    width: 60px;
+}
+
+.button-area span:hover {
+    cursor: pointer;
+    background-color: hsla(30, 10%, 30%, 0.95);
+}
