@@ -3,146 +3,111 @@
 <html lang="en">
 
 <head>
-    <title>Tic Tac Toe</title>
+    <title>Tris Online</title>
     <meta charset="UTF-8">
-    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="login.css">
     <link rel="stylesheet" href="lobby.css">
     <link rel="stylesheet" href="game.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js'></script>
     <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 </head>
 
 <body>
-    <div class="form" id="loginDiv">
-
-        <ul class="tab-group">
-            <li class="tab active"><a href="#signup">Sign Up</a></li>
-            <li class="tab"><a href="#login">Log In</a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div id="signup">
-                <h1 class="h1Login">Sign Up Tic Tac Toe</h1>
-
-                <form action="/" method="get">
-
-                    <div class="field-wrap">
-                        <label>
-                            Username<span class="req">*</span>
-                        </label>
-                        <input id="signUsername" type="text" required autocomplete="off" />
-                    </div>
-
-                    <div class="field-wrap">
-                        <label>
-                            Set a Password<span class="req">*</span>
-                        </label>
-                        <input id="signPwd" type="password" required autocomplete="off" />
-                    </div>
-
-                    <button id="btnSign" type="button" class="button button-block">Get Started</button>
-
-                </form>
-            </div>
-
-            <div id="login">
-                <h1 class="h1Login">Welcome Back!</h1>
-
-                <form action="/" method="get">
-
-                    <div class="field-wrap">
-                        <label>
-                            Username<span class="req">*</span>
-                        </label>
-                        <input id="logUsername" type="username" required autocomplete="off" />
-                    </div>
-
-                    <div class="field-wrap">
-                        <label>
-                            Password<span class="req">*</span>
-                        </label>
-                        <input id="logPwd" type="password" required autocomplete="off" />
-                    </div>
-                    <button id="btnLogin" type="button" class="button button-block" >Log In</button>
-                </form>
-            </div>
-        </div><!-- tab-content -->
-    </div> <!-- /form -->
-
-    <div id="lobbyDiv" class="row" style="display:none;">
-        <ul class="ulLobby">
-            <li class="liLobby"><a onclick="location.reload();" class="aLobby" id="logout">LOGOUT</a></li>
-        </ul>
-        <div class="column">
-            <header>
-                <h1 class="lobbyTitle" style="text-align:center">SFIDA QUALCUNO</h1>
-            </header>
-            <div class="column">
-                <div class="container">
-                    <div class="select">
-                        <select name="slct" id="slct" size="2">
-                        </select>
-                    </div>
+  <h1>Tris Online</h1><br>
+  <div class="container" id="loginDiv">
+      	<div class="row">
+  			<div class="col-md-6 col-md-offset-3">
+  				<div class="panel panel-login">
+  					<div class="panel-heading">
+  						<div class="row">
+  							<div class="col-xs-6">
+  								<a href="#" class="active" id="login-form-link">Login</a>
+  							</div>
+  							<div class="col-xs-6">
+  								<a href="#" id="register-form-link">Register</a>
+  							</div>
+  						</div>
+  						<hr>
+  					</div>
+  					<div class="panel-body">
+  						<div class="row">
+  							<div class="col-lg-12">
+                  <div id = "signup">
+  								<form id="login-form" action="/" method="get" role="form" style="display: block;">
+  									<div class="form-group">
+  										<input type="text" name="username" id="logUsername" tabindex="1" class="form-control" placeholder="Username" value="">
+  									</div>
+  									<div class="form-group">
+  										<input type="password" name="password" id="logPwd" tabindex="2" class="form-control" placeholder="Password">
+  									</div>
+  									<div class="form-group">
+  										<div class="row">
+  											<div class="col-sm-6 col-sm-offset-3">
+  												<input type="submit" name="login-submit" id="btnLogin" tabindex="4" class="form-control btn btn-login" value="Log In">
+  											</div>
+  										</div>
+  									</div>
+  								</form>
                 </div>
-            </div>
-            <div class="column" style="text-align:center">
-                <button id="btnSfida" type="button" class="myButton">SFIDA</button>
-            </div>
-        </div>
+  								<form id="register-form" action="https://phpoll.com/register/process" method="post" role="form" style="display: none;">
+  									<div class="form-group">
+  										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+  									</div>
+  									<div class="form-group">
+  										<input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="">
+  									</div>
+  									<div class="form-group">
+  										<input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password">
+  									</div>
+  									<div class="form-group">
+  										<div class="row">
+  											<div class="col-sm-6 col-sm-offset-3">
+  												<input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+  											</div>
+  										</div>
+  									</div>
+  								</form>
+  							</div>
+  						</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  	</div>
 
-        <div class="column">
-            <header>
-                <h1 class="lobbyTitle" style="text-align:center">CLASSIFICA TIC TAC TOE</h1>
-            </header>
-            <div class="wrapper">
-                <table class="tableLobby" id="ranking">
-                    <thead>
-                        <tr class="trLobby">
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Win</th>
-                            <th>Draw</th>
-                            <th>Lose</th>
-                        </tr>
-                    </thead>
-                    <tbody id=tableBody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <div id="gameDiv" onload="insertText();" style="display:none;">
 
-        <h1 class="header">Tic Tac Toe</h1>
-        <h4 class="h4Game" id="avversario"></h4>
-        <table class="tableGame" id="field">
-            <tr>
-                <td class="cell" id="c0"></td>
-                <td class="cell" id="c1"></td>
-                <td class="cell" id="c2"></td>
-            </tr>
-            <tr>
-                <td class="cell" id="c3"></td>
-                <td class="cell" id="c4"></td>
-                <td class="cell" id="c5"></td>
-            </tr>
-            <tr>
-                <td class="cell" id="c6"></td>
-                <td class="cell" id="c7"></td>
-                <td class="cell" id="c8"></td>
-            </tr>
-        </table>
-    </div>
+
+
 
 </body>
 
 </html>
+<script>
+$(function() {
 
+    $('#login-form-link').click(function(e) {
+		$("#login-form").delay(100).fadeIn(100);
+ 		$("#register-form").fadeOut(100);
+		$('#register-form-link').removeClass('active');
+		$(this).addClass('active');
+		e.preventDefault();
+	});
+	$('#register-form-link').click(function(e) {
+		$("#register-form").delay(100).fadeIn(100);
+ 		$("#login-form").fadeOut(100);
+		$('#login-form-link').removeClass('active');
+		$(this).addClass('active');
+		e.preventDefault();
+	});
+
+});
+</script>
 <script src="login.js"></script>
 <script src="handler.js"></script>
 <script src="game.js"></script>
