@@ -87,7 +87,7 @@ function executeServer()
           //eseguo la query
           connection.query(query, function (error, rows, field) {
               if (error) {
-                  console.log('Server - login : Query error ');
+                  console.log('Server - login : Query error '+ error);
               } else {
                   //utente loggato
                   if (rows.length == 1) {
@@ -96,7 +96,6 @@ function executeServer()
                           status: true,
                           username: rows[0].name,
                       });
-                      console.log(rows);
                       addUserOnline(rows[0].name, socket);
                       //getRanking();
                   } else {
@@ -132,7 +131,7 @@ function executeServer()
         });
         console.log("Server - signup : new user : "+data.signUsername);
         addUserOnline(data.signUsername, socket);
-        getRanking();
+        //getRanking();
     });
 
           //RICHIESTA SFIDA UN UTENTE
@@ -247,7 +246,7 @@ function executeServer()
               connection.query("SELECT * FROM SCORE WHERE win != 0 OR draw != 0 OR defeat != 0" +
                   " ORDER BY SCORE.win DESC, SCORE.draw DESC, SCORE.defeat ASC", function (error, rows, field) {
                       if (error) {
-                          console.log('Error in the Query');
+                          console.log('Server - get ranking Error in the Query');
                       } else {
                           if (rows.length > 0) {
                               io.sockets.emit('ranking', {

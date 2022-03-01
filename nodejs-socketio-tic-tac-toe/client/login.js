@@ -45,3 +45,18 @@ $(".tab a").on("click", function(e) {
 
     $(target).fadeIn(600);
 });
+
+
+function hideLogin() {
+  var loginForm = document.getElementById("login");
+  var signForm =  document.getElementById("signup");
+  loginForm.style.display = "none";
+  signForm.style.display = "block";
+}
+
+function hideSignup() {
+  var loginForm = document.getElementById("login");
+  var signForm =  document.getElementById("signup");
+  loginForm.style.display = "block";
+  signForm.style.display = "none";
+}

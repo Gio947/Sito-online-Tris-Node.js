@@ -12,64 +12,70 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js'></script>
     <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </head>
 
 <body>
-    <div class="form" id="loginDiv">
+  <br>
+     <h1 id="h1Tris">Tris Online Multiplayer</h1>
+   <br>
+    <div id="loginDiv">
+            <div id="signup" style="display:none;">
+               <div class="col-sm-13">
+                     <div class="form-group">
+                      <h2>Registrazione</h2>
+                     </div>
+                      <form action="/" method="get">
+                            <div class="form-group">
+                                    <label for="signUsername">Username</label>
+                                    <input type="text" class="form-control" id="signUsername" placeholder="" required autocomplete="off">
+                            </div>
 
-        <ul class="tab-group">
-            <li class="tab active"><a href="#signup">Sign Up</a></li>
-            <li class="tab"><a href="#login">Log In</a></li>
-        </ul>
+                            <div class="form-group">
+                                    <label for="signPwd">Password</label>
+                                    <input type="password" class="form-control" id="signPwd" placeholder="" required autocomplete="off">
+                            </div>
 
-        <div class="tab-content">
-            <div id="signup">
-                <h1 class="h1Login">Sign Up Tic Tac Toe</h1>
-
-                <form action="/" method="get">
-
-                    <div class="field-wrap">
-                        <label>
-                            Username<span class="req">*</span>
-                        </label>
-                        <input id="signUsername" type="text" required autocomplete="off" />
-                    </div>
-
-                    <div class="field-wrap">
-                        <label>
-                            Set a Password<span class="req">*</span>
-                        </label>
-                        <input id="signPwd" type="password" required autocomplete="off" />
-                    </div>
-
-                    <button id="btnSign" type="button" class="button button-block">Get Started</button>
-
-                </form>
+                            <div class="form-group">
+                                  <button id="btnSign" type="button" class="btn btn-primary mb-2">Registrati</button>
+                                  <button id="toSignForm" type="button" class="btn btn-link" onclick="hideSignup();">Ho già un'account</button>
+                            </div>
+                      </form>
+                  </div>
             </div>
-
+            <br>
+            <div class="col-sm-13">
             <div id="login">
-                <h1 class="h1Login">Welcome Back!</h1>
+                <div class="form-group">
+                 <h2>Login</h2>
+                </div>
 
                 <form action="/" method="get">
 
-                    <div class="field-wrap">
-                        <label>
-                            Username<span class="req">*</span>
-                        </label>
-                        <input id="logUsername" type="username" required autocomplete="off" />
-                    </div>
+                  <div class="form-group">
+                          <label for="logUsername">Username</label>
+                          <input type="text" class="form-control" id="logUsername" placeholder="" required autocomplete="off" required>
+                  </div>
 
-                    <div class="field-wrap">
-                        <label>
-                            Password<span class="req">*</span>
-                        </label>
-                        <input id="logPwd" type="password" required autocomplete="off" />
-                    </div>
-                    <button id="btnLogin" type="button" class="button button-block" >Log In</button>
+                  <div class="form-group">
+                          <label for="logPwd">Password</label>
+                          <input type="text" class="form-control" id="logPwd" placeholder="" required autocomplete="off" required>
+                  </div>
+
+
+
+                  <div class="form-group">
+                          <button id="btnLogin" type="button" class="btn btn-primary mb-2" >Entra</button>
+                          <button id="toSignForm" type="button" class="btn btn-link" onclick="hideLogin();">Registrati</button>
+                  </div>
+
+
                 </form>
             </div>
-        </div><!-- tab-content -->
+          </div>
     </div> <!-- /form -->
 
 
@@ -149,13 +155,14 @@
             </tr>
         </table>
     </div>
-
+   <div id="gameMessage" onload="insertText();" style="display:none;">
     <div class=tab-content>
       <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     </div>
+  </div>
 
 </body>
 

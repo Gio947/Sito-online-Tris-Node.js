@@ -1,6 +1,8 @@
 //Make connection
 var socket = io.connect('http://localhost:8080');//192.168.1.93:3000
 var username ="" ;
+
+
 //scambio di messaggi
 var messages = document.getElementById('messages');
 var form = document.getElementById('form');
@@ -25,6 +27,9 @@ var roomName;
 var turno;
 var opponent;
 
+
+
+
 //EVENTI EMESSI AGLI ELEMENTI
 btnLogin.addEventListener('click', function () { //assegno evento al bottone
     console.log("btn login");
@@ -36,10 +41,11 @@ btnLogin.addEventListener('click', function () { //assegno evento al bottone
             logPwd: logPwd.value.trim(),
         });
     }
+    else
+        alert("RIEMPIERE I CAMPI CORRETTAMENTE !!!")
 });
 
 btnSign.addEventListener('click',function(){ //assegno evento al bottone
-    console.log("hai cliccato il tasto sign parto");
     var signUsername = document.getElementById('signUsername');
     var signPwd = document.getElementById('signPwd');
     if(signUsername.value.trim() !== "" && signPwd.value.trim() !== ""){
@@ -48,7 +54,7 @@ btnSign.addEventListener('click',function(){ //assegno evento al bottone
             signPwd: signPwd.value.trim(),
         });
     }else
-        alert("RIEMPIERE I CAMPI CORRETTAMENTE !!!")
+    alert("RIEMPIERE I CAMPI CORRETTAMENTE !!!")
 });
 
 btnSfida.addEventListener('click',function(){
