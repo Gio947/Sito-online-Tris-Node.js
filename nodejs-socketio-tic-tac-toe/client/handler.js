@@ -1,6 +1,11 @@
 //Make connection
 var socket = io.connect('http://localhost:8080');//192.168.1.93:3000
 var username ="" ;
+//scambio di messaggi
+var messages = document.getElementById('messages');
+var form = document.getElementById('form');
+var input = document.getElementById('input');
+
 
 //LOGIN REGISTRAZIONE DIV ELEMENT
 var btnSign = document.getElementById('btnSign');
@@ -34,6 +39,7 @@ btnLogin.addEventListener('click', function () { //assegno evento al bottone
 });
 
 btnSign.addEventListener('click',function(){ //assegno evento al bottone
+    console.log("hai cliccato il tasto sign parto");
     var signUsername = document.getElementById('signUsername');
     var signPwd = document.getElementById('signPwd');
     if(signUsername.value.trim() !== "" && signPwd.value.trim() !== ""){
@@ -74,6 +80,7 @@ socket.on('login', function(data){ //dalle socket prendo quella con evento 'logi
 
 //EVENTI REGISTRAZIONE
 socket.on('signup', function(data){ //dalle socket prendo quella con evento 'signup' e prendo i dati ricevuti
+   console.log("risposta");
     if(data.status) {
         username = data.username;
         alert("REGISTRAZIONE EFFETTUATA CON SUCCESSO");
@@ -168,3 +175,19 @@ socket.on('inizialize', function(data){
     else
         alert("Sfida non Accettata");
 });
+
+//messaggi
+form.addEventListener('submit', function(e) {
+     e.preventDefault();
+     if (input.value) {
+       socket.emit('chat message', input.value);
+       input.value = '';
+     }
+   });
+
+   socket.on('chat message', function(msg) {
+     var item = document.createElement('li');
+     item.textContent = msg;
+     messages.appendChild(item);
+     window.scrollTo(0, document.body.scrollHeight);
+   });
