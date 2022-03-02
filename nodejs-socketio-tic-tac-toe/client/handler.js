@@ -1,6 +1,6 @@
 //Make connection
 var socket = io.connect('http://localhost:8080');//192.168.1.93:3000
-var username ="" ;
+//var username = document.getElementById('username');
 
 
 //scambio di messaggi
@@ -14,7 +14,7 @@ var btnSign = document.getElementById('btnSign');
 var btnLogin = document.getElementById('btnLogin');
 var loginDiv = document.getElementById('loginDiv');
 var lobbyDiv = document.getElementById('lobbyDiv');
-
+var messageDiv = document.getElementById('gameMessage');
 //LOBBY DIV ELEMENT
 var select = document.getElementById("slct");
 var tableRanking = document.getElementById("ranking");
@@ -40,6 +40,7 @@ btnLogin.addEventListener('click', function () { //assegno evento al bottone
             logUsername: logUsername.value.trim(),
             logPwd: logPwd.value.trim(),
         });
+        document.getElementById("username").innerHTML=logUsername.value;
     }
     else
         alert("RIEMPIERE I CAMPI CORRETTAMENTE !!!")
@@ -53,15 +54,17 @@ btnSign.addEventListener('click',function(){ //assegno evento al bottone
             signUsername: signUsername.value.trim(),
             signPwd: signPwd.value.trim(),
         });
+          document.getElementById("username").innerHTML=signUsername.value;
     }else
     alert("RIEMPIERE I CAMPI CORRETTAMENTE !!!")
 });
 
+//quando clicco su sfida prendo l'utente selezionato e inizializzo una socket di tipo reqSfida disablitado il pulsante di sfida per non creare problemi di sessioni doppie
 btnSfida.addEventListener('click',function(){
     if(select.selectedIndex >= 0){
         btnSfida.disabled = true;
         var strUser = select.options[select.selectedIndex].value;
-        socket.emit('reqSfida', { //passo nome dell'evento 'signup' e parametri da inviare
+        socket.emit('reqSfida', { //come parametro invio al server il nome di chi ha richiesto la sfida e il nome dell'invitato
             reciverName: strUser,
             senderName: username,
         });
@@ -87,6 +90,7 @@ socket.on('login', function(data){ //dalle socket prendo quella con evento 'logi
 //EVENTI REGISTRAZIONE
 socket.on('signup', function(data){ //dalle socket prendo quella con evento 'signup' e prendo i dati ricevuti
    console.log("risposta");
+   console.log(data.status);
     if(data.status) {
         username = data.username;
         alert("REGISTRAZIONE EFFETTUATA CON SUCCESSO");
@@ -140,6 +144,7 @@ socket.on('ranking', function(data){ //dalle socket prendo quella con evento 'lo
 });
 
 //RICEZIONE SFIDA
+//mi arriva la richiesta di sfida
 socket.on('reqSfida', function(data){
     var sfida =  window.confirm('TI SFIDA : '+ data.senderName + ', ACCETTI ?');
     var esito;
@@ -150,6 +155,7 @@ socket.on('reqSfida', function(data){
     }
     //esito = false;
 
+    //rispondo alla sfida
     socket.emit('respSfida', { //Rispondo alla sfida
         reciverName: data.reciverName,
         senderName: data.senderName,
@@ -165,6 +171,7 @@ socket.on('inizialize', function(data){
         alert("Sfida Accettata Nella stanza : "+ data.roomName);
         lobbyDiv.style.display = 'none';
         gameDiv.style.display = 'inline';
+        gameMessage.style.display = 'inline';
         if(data.senderName == username){ //SCELTA DEL SIMBOLO E PRIMO TURNO
             simbolo = "X";
             turno = true;
@@ -182,18 +189,17 @@ socket.on('inizialize', function(data){
         alert("Sfida non Accettata");
 });
 
-//messaggi
+//client che invia un messaggio
 form.addEventListener('submit', function(e) {
+     console.log("richiesta messaggio lato client");
+     var sender = document.getElementById("username").innerHTML;
      e.preventDefault();
      if (input.value) {
-       socket.emit('chat message', input.value);
-       input.value = '';
-     }
-   });
 
-   socket.on('chat message', function(msg) {
-     var item = document.createElement('li');
-     item.textContent = msg;
-     messages.appendChild(item);
-     window.scrollTo(0, document.body.scrollHeight);
+       socket.emit('chat message', {
+           roomName: roomName,
+           message: sender + ": "+input.value,
+       });
+
+     }
    });

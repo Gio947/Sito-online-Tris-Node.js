@@ -20,8 +20,7 @@
 
 <body>
   <br>
-     <h1 id="h1Tris">Tris Online Multiplayer</h1>
-   <br>
+    <p id="username" hidden></p>
     <div id="loginDiv">
             <div id="signup" style="display:none;">
                <div class="col-sm-13">
@@ -77,23 +76,11 @@
             </div>
           </div>
     </div> <!-- /form -->
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <div class="col-sm-13">
     <div id="lobbyDiv" class="row" style="display:none;">
-        <ul class="ulLobby">
-            <li class="liLobby"><a onclick="location.reload();" class="aLobby" id="logout">LOGOUT</a></li>
-        </ul>
+        <div class="form-group">
+              <button id="logout" type="button" class="btn btn-link" onclick="location.reload();">Logout</button>
+        </div>
         <div class="column">
             <header>
                 <h1 class="lobbyTitle" style="text-align:center">SFIDA QUALCUNO</h1>
@@ -132,6 +119,7 @@
             </div>
         </div>
     </div>
+  </div>
 
     <div id="gameDiv" onload="insertText();" style="display:none;">
 

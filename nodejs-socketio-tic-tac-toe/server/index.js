@@ -79,7 +79,7 @@ function executeServer()
           }
       });
 
-      //login
+      //login : ricevo richiesta dal client di login, faccio una query e se esiste l'utente nel db rispondo al socket con un messaggio positivo facendolo loggare altrimenti nego l'accesso
       socket.on('login', function (data) {
           console.log('Server - new login request ');
           var query = "SELECT * FROM user WHERE name = '" + data.logUsername + "' AND password = '" + data.logPwd + "'";
@@ -112,36 +112,44 @@ function executeServer()
 
       });
 
-      //registrazione
+      //registrazione : ricevo la richiesta dal client , provo a fare la query se riesco ad aggiungere l'utente rispondo al client con un messaggio positivo e lo faccio loggare altrimenti nego l'accesso
       socket.on('signup', function (data) {
          console.log("Server - signup request...");
           var query = "INSERT INTO user (name, password,registration_date) VALUES ('" + data.signUsername + "','" + data.signPwd + "' , 'curdate()')";
           connection.query(query, function (err, rows, field) {
                 if (err) {
+                    error = err;
                     console.log("Server - signup error : " + err);
                     io.to(socket.id).emit('signup', {
                         status: false,
                     });
                 }
+                else{
+                  io.to(socket.id).emit('signup', {
+                      status: true,
+                      username: data.signUsername,
+                  });
+                  console.log("Server - signup : new user : "+data.signUsername);
+                  addUserOnline(data.signUsername, socket);
+                  //getRanking();
+                }
             });
 
-        io.to(socket.id).emit('signup', {
-            status: true,
-            username: data.signUsername,
-        });
-        console.log("Server - signup : new user : "+data.signUsername);
-        addUserOnline(data.signUsername, socket);
-        //getRanking();
+
     });
 
           //RICHIESTA SFIDA UN UTENTE
+          //il server riceve una richiesta di sfida che parte da pippo ed è indirizzata a topolino
           socket.on('reqSfida', function (data) {
+              //mi prendo l'utente che ha come chiave il nome di chi invia e di chi riceve
               for (var key in onlineUser) {
                   if (key == data.reciverName) { //invio richiesta a specifico client
                       setUserStatus(data.reciverName); //UTENTE IMPEGNATO
                       setUserStatus(data.senderName); //UTENTE IMPEGNATO
+                      //aggiorno la lista degli utenti online
                       getList();
                       console.log("SFIDANTI: " + data.reciverName + data.senderName)
+                      //l'utente specifico tramite il proprio socket invia la richiesta all'altro utente
                       onlineUser[key].userSocket.emit('reqSfida', {
                           senderName: data.senderName,
                           reciverName: data.reciverName,
@@ -152,6 +160,7 @@ function executeServer()
 
 
           //SE SI ACCETTA LA SFIDA SI ENTRA NELLA STESSA ROOM
+          //ho la risposta del destinatario se ha accettato entriamo in una room per giocare
           socket.on('respSfida', function (data) {
               if (data.esito == true) {
                   var nameRoom = getNameRoom();
@@ -182,6 +191,13 @@ function executeServer()
           //MOSSA EFFETTUATA
           socket.on('mossa', function (data) {
               io.to(data.roomName).emit('mossa', data);
+          });
+
+          //MESSAGGIO INVIATO
+          //MOSSA EFFETTUATA
+          socket.on('chat message', function (data) {
+              console.log("messaggio da inviare a un client");
+              io.to(data.roomName).emit('chat message', data.message);
           });
 
 

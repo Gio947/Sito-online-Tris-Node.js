@@ -7,9 +7,15 @@ var c5 = document.getElementById("c5");
 var c6 = document.getElementById("c6");
 var c7 = document.getElementById("c7");
 var c8 = document.getElementById("c8");
-
+var form = document.getElementById('form');
 var check = ""; //Per il tris
 var result="";
+
+
+
+
+
+
 
 function addRed(cell){
     cell.addEventListener('mouseover', function(event) {
@@ -45,6 +51,16 @@ function addClick(cell){
         }
     });
 }
+
+//client che riceve un messaggio dal server
+socket.on('chat message', function(message) {
+  console.log("ho ricevuto un messaggio :" + message)
+  var item = document.createElement('li');
+  item.textContent = message;
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
 
 socket.on('mossa', function(data){
     myCella = document.getElementById(data.idCella);
