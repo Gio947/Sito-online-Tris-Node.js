@@ -1,12 +1,11 @@
-
-
+//SERVER
 const http = require("http"),
 express = require("express"),
 app = express(),
 socketIo = require("socket.io");
 const fs = require("fs");
 var mysql = require('mysql');
-const server = http.Server(app).listen(process.env.PORT || 8080);
+const server = http.Server(app).listen(8080);
 const io = socketIo(server);
 const clients = {};
 
