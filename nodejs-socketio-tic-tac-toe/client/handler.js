@@ -1,6 +1,6 @@
 //Make connection
 //var socket = io.connect('http://localhost:8080');//192.168.1.93:3000
-var socket = io.connect('https://trisonline.herokuapp.com:'+process.env.PORT);
+var socket = io.connect('https://trisonline.herokuapp.com');
 //var username = document.getElementById('username');
 
 
