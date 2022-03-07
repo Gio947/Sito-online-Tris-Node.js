@@ -20,7 +20,7 @@ var result="";
 function addRed(cell){
     cell.addEventListener('mouseover', function(event) {
         if(cell.textContent !== "X" && cell.textContent !== "O"){
-            cell.style.backgroundColor = "red";
+            cell.style.opacity = 0.8;
         }
     });
 }
@@ -28,7 +28,7 @@ function addRed(cell){
 function addBlue(cell){
     cell.addEventListener('mouseout', function(event) {
         if(cell.textContent !== "X" && cell.textContent !== "O"){
-           cell.style.backgroundColor = "#268";
+            cell.style.opacity = 1.0;
         }
     });
 }
@@ -64,7 +64,7 @@ socket.on('chat message', function(message) {
 
 socket.on('mossa', function(data){
     myCella = document.getElementById(data.idCella);
-    myCella.style.backgroundColor = "#268";
+    myCella.style.backgroundColor = "#007BFF";
     myCella.innerHTML = data.simbolo;
 
     if(data.simbolo !== simbolo){
@@ -140,13 +140,14 @@ function checkWinner(){
         simbolo="";
         lobbyDiv.style.display = 'inline';
         gameDiv.style.display = 'none';
+        gameMessage.style.display = 'none';
         result="";
     }
 }
 
 //PULISCE LA CELLA
 function clear(cell){
-cell.style.backgroundColor = "#268"
+    cell.style.backgroundColor = "#007BFF"
 cell.innerHTML = "";
 }
 
