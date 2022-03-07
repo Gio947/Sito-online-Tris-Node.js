@@ -142,6 +142,12 @@ function checkWinner(){
         gameDiv.style.display = 'none';
         gameMessage.style.display = 'none';
         result="";
+        let messageList = document.getElementById('messages');
+        while (messageList.firstChild) {
+            messageList.removeChild(messageList.firstChild);
+        }
+
+
     }
 }
 
