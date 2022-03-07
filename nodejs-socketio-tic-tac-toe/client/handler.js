@@ -201,6 +201,8 @@ form.addEventListener('submit', function(e) {
            roomName: roomName,
            message: sender + ": "+input.value,
        });
+	   
+	   input.value = ""; 
 
      }
    });
