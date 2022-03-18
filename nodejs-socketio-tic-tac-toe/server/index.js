@@ -1,5 +1,3 @@
-
-
 const http = require("http"),
 express = require("express"),
 app = express(),
@@ -98,7 +96,7 @@ function executeServer()
                           username: rows[0].name,
                       });
                       addUserOnline(rows[0].name, socket);
-                      //getRanking();
+                      getUserStatistics(rows[0].name);
                   } else {
                      console.log("Server - login : user "+ data.logUsername + " not exist !!")
                       //utente non loggato
@@ -114,30 +112,44 @@ function executeServer()
       });
 
       //registrazione : ricevo la richiesta dal client , provo a fare la query se riesco ad aggiungere l'utente rispondo al client con un messaggio positivo e lo faccio loggare altrimenti nego l'accesso
-      socket.on('signup', function (data) {
-         console.log("Server - signup request...");
-          var query = "INSERT INTO user (name, password,registration_date) VALUES ('" + data.signUsername + "','" + data.signPwd + "' , 'curdate()')";
-          connection.query(query, function (err, rows, field) {
-                if (err) {
-                    error = err;
-                    console.log("Server - signup error : " + err);
-                    io.to(socket.id).emit('signup', {
-                        status: false,
-                    });
-                }
-                else{
-                  io.to(socket.id).emit('signup', {
-                      status: true,
-                      username: data.signUsername,
-                  });
-                  console.log("Server - signup : new user : "+data.signUsername);
-                  addUserOnline(data.signUsername, socket);
-                  //getRanking();
-                }
-            });
+      socket.on('signup', function(data) {
+      console.log("Server - signup request...");
+      var query = "INSERT INTO user (name, password,registration_date) VALUES ('" + data.signUsername + "','" + data.signPwd + "' , 'curdate()')";
+      connection.query(query, function(err, rows, field) {
+          if (err) {
+              error = err;
+              console.log("Server - signup error : " + err);
+              io.to(socket.id).emit('signup', {
+                  status: false,
+              });
+          } else {
+
+              var queryScore = "INSERT INTO score VALUES ('0','0','0','" + data.signUsername + "','')";
+              console.log(queryScore);
+              connection.query(queryScore, function(err, rows, field) {
+                  //se c'è un errore
+                  if (err) {
+                      error = err;
+                      console.log("Server - signup error during create new score user : " + err);
+                      io.to(socket.id).emit('signup', {
+                          status: false,
+                      });
+                  } else {
+                      io.to(socket.id).emit('signup', {
+                          status: true,
+                          username: data.signUsername,
+                      });
+                      console.log("Server - signup : new user : " + data.signUsername);
+                      addUserOnline(data.signUsername, socket);
+                      getUserStatistics(data.signUsername);
+                  }
+
+              });
+          }
+      });
 
 
-    });
+  });
 
           //RICHIESTA SFIDA UN UTENTE
           //il server riceve una richiesta di sfida che parte da pippo ed è indirizzata a topolino
@@ -204,39 +216,113 @@ function executeServer()
 
           //ASSEGNAMO PUNTEGGIO
           socket.on('winner', function (data) {
+             console.log("partita finita");
               setUserStatus(data.player1);
               setUserStatus(data.player2);
+
               getList();
               console.log(data.winner + data.esito);
               if (data.esito == "draw")//ASSEGNARE PAREGGIO AD ENTRAMBI
               {
-                  updatePoints(data.player1, "draw");
-                  updatePoints(data.player2, "draw");
+                  updateUserScore(data.player1, 3);
+                  updateUserScore(data.player2, 3);
+                  updateHistory(data.player1,data.player2,3,3);
               } else {
                   if (data.winner == data.player1) {
-                      updatePoints(data.player1, "win");
-                      updatePoints(data.player2, "defeat");
+                      updateUserScore(data.player1, 1);
+                      updateUserScore(data.player2, 2);
+                      updateHistory(data.player1,data.player2,1,2);
                   }
                   else {
-                      updatePoints(data.player1, "defeat");
-                      updatePoints(data.player2, "win");
+                      updateUserScore(data.player1, 2);
+                      updateUserScore(data.player2, 1);
+                      updateHistory(data.player1,data.player2,2,1);
                   }
               }
-              getRanking();
+              console.log("storico su db aggiornato");
+
+              updateLastMatch(data.player1);
+              updateLastMatch(data.player2);
+
+              console.log("socket per aggionrmento storico inviate");
+              //getUserStatistics();
           });
 
 
-          //AGGIORNARE PUNTEGGIO IN BASE AL RISULTATO DELLA PARTITA
-          function updatePoints(username, result) {
-              connection.query("UPDATE SCORE SET " + result + " = " + result + "+1  WHERE userName = '" + username + "'", function (err) {
+          //in base all'id che identifica vittoria/sconfitta/pareggio aggiorno le statistiche dell'utente
+          //1 : vittoria
+          //2 : sconfitta
+          //3 : pareggio
+          function updateUserScore(username, idResult) {
+            var typeResult = "";
+
+            if(idResult == 1){
+              typeResult = "win";
+            }
+            else if(idResult == 2){
+                typeResult = "defeat";
+            }
+
+            else{
+              typeResult = "tie";
+            }
+
+            var query = "UPDATE score SET " + typeResult + " = " + typeResult + "+1  WHERE user = '" + username + "'";
+
+            connection.query(query, function (err) {
+                if (err) {
+                    console.log("Server updateUserScore error : "+err);
+                }
+                else {
+                    console.log("Server updateUserScore : punteggio aggiornato ");
+                }
+            });
+          }
+
+          function updateLastMatch(player){
+            console.log(onlineUser[player].userSocket);
+            var socket = onlineUser[player].userSocket;
+            var username = player;
+            var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
+           console.log(query);
+            connection.query(query, function(error, rows, field) {
+                if (error) {
+                    console.log('Server - get search Error in the Query ' + error);
+                    io.to(socket.id).emit('storico', {
+                        status: false,
+                    });
+
+                } else {
+                    console.log(rows);
+                    io.to(socket.id).emit('storico', {
+                        status: true,
+                        rows: rows,
+                        username: username,
+                    });
+                }
+            });
+          }
+
+          function updateHistory(username1, username2, result1, result2) {
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0');
+              var yyyy = today.getFullYear();
+
+              today = yyyy + '-' + mm + '-' + dd;
+              var queryHistory = "INSERT into history VALUES('', '" + username1 + "', '" + username2 + "' , '" + today + "' , '" + result1 + "' , '" + result2 + "')";
+              console.log(queryHistory);
+
+              connection.query(queryHistory, function(err) {
                   if (err) {
-                      console.log(err);
-                  }
-                  else {
-                      console.log('Punteggio Aggiornato');
+                      console.log("Server updateHistory error : " + err);
+                  } else {
+                      console.log("Server updateHistory : storico partite aggiornato ! ");
                   }
               });
           }
+
+
           //AGGIUNGERE UTENTE ALLA LISTA UTENTI ONLINE DEL SEVER
           function addUserOnline(username, userSocket) {
               onlineUser[username] = {
@@ -259,19 +345,22 @@ function executeServer()
               });
           }
           //COMUNICA CLASSIFICA
-          function getRanking() {
-              connection.query("SELECT * FROM SCORE WHERE win != 0 OR draw != 0 OR defeat != 0" +
-                  " ORDER BY SCORE.win DESC, SCORE.draw DESC, SCORE.defeat ASC", function (error, rows, field) {
+          function getUserStatistics(username) {
+              var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
+              console.log(query);
+              connection.query(query, function (error, rows, field) {
                       if (error) {
-                          console.log('Server - get ranking Error in the Query');
+                          console.log('Server - get storico Error in the Query '+error);
                       } else {
+                          console.log(rows);
                           if (rows.length > 0) {
-                              io.sockets.emit('ranking', {
+                              io.sockets.emit('storico', {
                                   status: true,
                                   rows: rows,
+                                  username : username,
                               });
                           } else {
-                              io.sockets.emit(socket.id).emit('ranking', {
+                              io.sockets.emit(socket.id).emit('storico', {
                                   status: false,
                               });
                           }
@@ -298,6 +387,80 @@ function executeServer()
                   roomName.push(newRoom);
               }
               return newRoom;
-          }
+      }
+
+
+      socket.on('search', function(data) {
+        var username = data.username;
+        var fromDate = data.fromDate;
+        var toDate = data.toDate;
+        var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM trisonline_esame.history WHERE (date BETWEEN '"+fromDate+"' AND '"+toDate+"') AND (first_user = '"+username+"' OR second_user = '"+username+"')";
+        console.log(query);
+        connection.query(query, function(error, rows, field) {
+            if (error) {
+                console.log('Server - get search Error in the Query ' + error);
+                io.to(socket.id).emit('search', {
+                    status: false,
+                });
+
+            } else {
+                console.log(rows);
+                io.to(socket.id).emit('search', {
+                    status: true,
+                    rows: rows,
+                    username: username,
+                });
+            }
+        });
+});
+/*io.to(socket.id).emit('signup', {
+    status: true,
+    username: data.signUsername,
+});*/
+
+  socket.on('storico', function(data) {
+    var username = data.username;
+    var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY date DESC LIMIT 10";
+   console.log(query);
+    connection.query(query, function(error, rows, field) {
+        if (error) {
+            console.log('Server - get search Error in the Query ' + error);
+            io.to(socket.id).emit('storico', {
+                status: false,
+            });
+
+        } else {
+            console.log(rows);
+            io.to(socket.id).emit('storico', {
+                status: true,
+                rows: rows,
+                username: username,
+            });
+        }
+    });
+});
+
+  socket.on('classifica', function(data) {
+
+  var query = "SELECT * FROM trisonline_esame.score order by win asc";
+  console.log(query);
+  connection.query(query, function(error, rows, field) {
+      if (error) {
+          console.log('Server - get search Error in the Query ' + error);
+          io.sockets.emit(socket.id).emit('classifica', {
+              status: false,
+          });
+
+      } else {
+          console.log(rows);
+          io.sockets.emit('classifica', {
+              status: true,
+              rows: rows,
+          });
+      }
   });
+ });
+
+});
+
 }

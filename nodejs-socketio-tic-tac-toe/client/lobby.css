@@ -46,8 +46,8 @@
     padding: 2em 0 3em;
     width: 80%;
     overflow: hidden;
-    
-    
+
+
 }
 
 .tableLobby {
@@ -130,10 +130,9 @@ select {
 
 
 .select {
-   
     display: flex;
-    width: 5em;
-    height: 14em;
+    width: 13em;
+    height: 18em;
     line-height: 3;
     background: #007BFF;
     overflow: hidden;
@@ -141,9 +140,8 @@ select {
     border-color: blue;
     float: left;
     color: white;
-    margin-top:4vh;
-    margin-left:calc(50% - 2.5em);
-    
+    margin-top: 4vh;
+    margin-left: calc(50% - 6.5em);
 }
 
 

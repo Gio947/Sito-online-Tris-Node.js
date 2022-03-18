@@ -19,6 +19,20 @@ div#login {
     BACKGROUND: WHITE;
 }
 
+div#dati {
+    margin: auto;
+    width: 43%;
+    padding: 24px;
+    BACKGROUND: WHITE;
+}
+
+div#classifica {
+    margin: auto;
+    width: 43%;
+    padding: 24px;
+    BACKGROUND: WHITE;
+}
+
 
 body {
     padding-top: 90px;

@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="game.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js'></script>
-    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <!--<script src="https://trisonline.herokuapp.com/socket.io/socket.io.js"></script>-->    <!--SU EROKU-->
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>    <!--SU LOCALHOST-->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -98,7 +99,7 @@
 
               <div class="select" style="text-align: center">
                   <select name="slct" id="slct" size="2">
-       
+
                     </select>
                   <!--
                  <select id="slct" name="slct" class="selectpicker" data-live-search="true">
@@ -109,11 +110,11 @@
 
           </div>
 
-          
+
           <div class="column" style="border-left: 4px solid blue; height:60vh;">
-             
+
               <h2 class="lobbyTitle" style="text-align:center">CLASSIFICA E STATISTICHE</h2>
-              
+
               <div class="wrapper">
                   <table class="tableLobby" id="ranking">
                       <thead>
@@ -174,8 +175,8 @@
               </form>
           </div>
       </div>
-    
-   
+
+
 
 </body>
 

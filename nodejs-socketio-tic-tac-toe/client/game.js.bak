@@ -7,10 +7,31 @@ var c5 = document.getElementById("c5");
 var c6 = document.getElementById("c6");
 var c7 = document.getElementById("c7");
 var c8 = document.getElementById("c8");
-var gameMessage = document.getElementById('gameMessage');
+var form = document.getElementById('form');
 var check = ""; //Per il tris
 var result="";
 
+
+
+
+
+
+
+function addRed(cell){
+    cell.addEventListener('mouseover', function(event) {
+        if(cell.textContent !== "X" && cell.textContent !== "O"){
+            cell.style.opacity = 0.8;
+        }
+    });
+}
+
+function addBlue(cell){
+    cell.addEventListener('mouseout', function(event) {
+        if(cell.textContent !== "X" && cell.textContent !== "O"){
+            cell.style.opacity = 1.0;
+        }
+    });
+}
 
 function addClick(cell){
     cell.addEventListener('click', function(event) {
@@ -26,7 +47,7 @@ function addClick(cell){
                 cell.innerHTML = simbolo;
                 clearAll();*/
             } else
-                alert("Attendi il tuo turno per poter fare la tua mossa.");
+                alert("NON E' IL TUO TURNO");
         }
     });
 }
@@ -87,17 +108,17 @@ function checkWinner(){
         if(check == simbolo){
             check = username;
             result = "win";
-            alert("Hai vinto!!!!");
+            alert("COMPLIMENTI HA VINTO !!! ");
         }
         else if(check == "draw"){
             check = opponent;
             result = "draw";
-            alert("La partita è finita in pareggio");
+            alert("PAREGGIO !!! ");
         }
         else if(check !== simbolo){
             check=opponent;
             result = "lose";
-            alert("Sei stato sconfitto");
+            alert("PECCATO HAI PERSO !!! ");
         }
         clearAll();
         if(turno == true){ //SE QUALCUNO HA FATTO TRIS INVIO UNA SOCKET
@@ -108,8 +129,7 @@ function checkWinner(){
                 player1: opponent,
                 player2: username,
             });
-            //aggiornaStorico(opponent,username);
-            aggiornaClassifica();
+
 
         }
         //RESET VARIABILI
@@ -126,8 +146,6 @@ function checkWinner(){
         while (messageList.firstChild) {
             messageList.removeChild(messageList.firstChild);
         }
-
-
 
 
     }
@@ -164,14 +182,23 @@ addClick(c5);
 addClick(c6);
 addClick(c7);
 addClick(c8);
-
-function aggiornaClassifica()
-{
-    console.log('start aggiorna classifica');
-
-    socket.emit('classifica', {
-        blank: "",
-    });
-
-    console.log('end aggiorna classifica');
-}
+//AGGIUNGO EVENTO MOUSEOVER RED
+addRed(c0);
+addRed(c1);
+addRed(c2);
+addRed(c3);
+addRed(c4);
+addRed(c5);
+addRed(c6);
+addRed(c7);
+addRed(c8);
+//AGGIUNGO EVENTO MOUSEOUT BLU
+addBlue(c0);
+addBlue(c1);
+addBlue(c2);
+addBlue(c3);
+addBlue(c4);
+addBlue(c5);
+addBlue(c6);
+addBlue(c7);
+addBlue(c8);

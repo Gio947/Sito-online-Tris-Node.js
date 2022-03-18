@@ -60,3 +60,4 @@ function hideSignup() {
   loginForm.style.display = "block";
   signForm.style.display = "none";
 }
+
