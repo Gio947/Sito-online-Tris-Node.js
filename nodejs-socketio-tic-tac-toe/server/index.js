@@ -346,7 +346,7 @@ function executeServer()
           }
           //COMUNICA CLASSIFICA
           function getUserStatistics(username) {
-              var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
+              var query = "SELECT id , first_user, second_user, result_first_user, DATE_FORMAT(date, '%M %d %Y') as date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
               console.log(query);
               connection.query(query, function (error, rows, field) {
                       if (error) {
