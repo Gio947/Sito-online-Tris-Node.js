@@ -283,7 +283,7 @@ function executeServer()
             console.log(onlineUser[player].userSocket);
             var socket = onlineUser[player].userSocket;
             var username = player;
-            var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
+            var query = "SELECT id , first_user, second_user, result_first_user,  DATE_FORMAT(date, '%M %d %Y') AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
            console.log(query);
             connection.query(query, function(error, rows, field) {
                 if (error) {
@@ -346,7 +346,7 @@ function executeServer()
           }
           //COMUNICA CLASSIFICA
           function getUserStatistics(username) {
-              var query = "SELECT id , first_user, second_user, result_first_user, DATE_FORMAT(date, '%M %d %Y') as date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
+              var query = "SELECT id , first_user, second_user, result_first_user, DATE_FORMAT(date, '%M %d %Y') AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
               console.log(query);
               connection.query(query, function (error, rows, field) {
                       if (error) {
@@ -391,7 +391,7 @@ function executeServer()
         var username = data.username;
         var fromDate = data.fromDate;
         var toDate = data.toDate;
-        var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM trisonline_esame.history WHERE (date BETWEEN '"+fromDate+"' AND '"+toDate+"') AND (first_user = '"+username+"' OR second_user = '"+username+"')";
+        var query = "SELECT id , first_user, second_user, result_first_user,  DATE_FORMAT(date, '%M %d %Y') AS date, result_second_user FROM trisonline_esame.history WHERE (date BETWEEN '"+fromDate+"' AND '"+toDate+"') AND (first_user = '"+username+"' OR second_user = '"+username+"')";
         console.log(query);
         connection.query(query, function(error, rows, field) {
             if (error) {
@@ -417,7 +417,7 @@ function executeServer()
 
   socket.on('storico', function(data) {
     var username = data.username;
-    var query = "SELECT id , first_user, second_user, result_first_user,  DATE_ADD(date, INTERVAL 1 DAY) AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY date DESC LIMIT 10";
+    var query = "SELECT id , first_user, second_user, result_first_user,  DATE_FORMAT(date, '%M %d %Y') AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY date DESC LIMIT 10";
    console.log(query);
     connection.query(query, function(error, rows, field) {
         if (error) {
