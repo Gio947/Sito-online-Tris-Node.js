@@ -50,7 +50,7 @@ function appAndFileSetting()
   app.use(express.static(__dirname + "/../node_modules/"));
   app.get("/", (req, res) => {
     //res.sendFile("login.html", { root: __dirname + "/../client" });
-    const stream = fs.createReadStream(__dirname + "/../client/login.html");
+    const stream = fs.createReadStream(__dirname + "/../client/index.html");
     stream.pipe(res);
   });
 }
