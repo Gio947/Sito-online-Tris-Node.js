@@ -262,8 +262,11 @@ socket.on('inizialize', function(data){
     {
         alert("Messaggio di sfida accettato , la partita si giocherà nella stanza : "+ data.roomName);
         lobbyDiv.style.display = 'none';
+        dati.style.display = 'none';
+        classifica.style.display = 'none';
         gameDiv.style.display = 'inline';
         gameMessage.style.display = 'inline';
+
         if(data.senderName == username){ //SCELTA DEL SIMBOLO E PRIMO TURNO
             simbolo = "X";
             turno = true;
