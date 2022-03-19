@@ -7,24 +7,22 @@ var c5 = document.getElementById("c5");
 var c6 = document.getElementById("c6");
 var c7 = document.getElementById("c7");
 var c8 = document.getElementById("c8");
+
 var gameMessage = document.getElementById('gameMessage');
-var check = ""; //Per il tris
+var check = ""; //controllo il tris
 var result="";
 
 
 function addClick(cell){
     cell.addEventListener('click', function(event) {
-        if(cell.textContent == "") {//SE CELLA VUOTA
-            if (turno == true && check =="") {//SE TURNO E NESSUNO HA FATTO TRIS
+        if(cell.textContent == "") {
+            if (turno == true && check =="") {//se è il mio turno e nessuno ha vinto
                 turno = false;
                 socket.emit('mossa', {
                     roomName: roomName,
                     idCella: cell.id,
                     simbolo: simbolo,
                 });
-                /*cell.style.backgroundColor = "#268";
-                cell.innerHTML = simbolo;
-                clearAll();*/
             } else
                 alert("Attendi il tuo turno per poter fare la tua mossa.");
         }
@@ -40,26 +38,26 @@ socket.on('chat message', function(message) {
   window.scrollTo(0, document.body.scrollHeight);
 });
 
+//ricezione mossa dal server
 socket.on('mossa', function(data){
     myCella = document.getElementById(data.idCella);
-    myCella.style.backgroundColor = "#007BFF";
     myCella.innerHTML = data.simbolo;
 
     if(data.simbolo !== simbolo){
         turno = true;
     }
+    //controllo se è presente un vincitore
     checkWinner();
 });
 
 function checkDraw() {
-    //CONTROLLO PAREGGIO
     if(check == "" && c0.textContent !== "" && c1.textContent !== "" && c2.textContent !== "" && c3.textContent !== "" && c4.textContent !== "" && c5.textContent !== "" && c6.textContent !== "" && c7.textContent !== "" && c8.textContent !== "" ){
         check = "draw";
     }
 }
 
 function checkTris(){
-    //CONTROLLO TRIS
+    //controllo esito partita
     if(c0.textContent !== "" && c0.textContent == c1.textContent && c1.textContent == c2.textContent){
         check = c0.textContent;
     }else if(c3.textContent !== "" && c3.textContent == c4.textContent && c4.textContent == c5.textContent) {
@@ -91,7 +89,7 @@ function checkWinner(){
         else if(check == "draw"){
             check = opponent;
             result = "draw";
-            alert("La partita è finita in pareggio");
+            alert("La partita e' finita in pareggio");
         }
         else if(check !== simbolo){
             check=opponent;
@@ -99,7 +97,7 @@ function checkWinner(){
             alert("Sei stato sconfitto");
         }
         clearAll();
-        if(turno == true){ //SE QUALCUNO HA FATTO TRIS INVIO UNA SOCKET
+        if(turno == true){ //se qualcuno ha fatto tris invio una socket
             socket.emit('winner', {
                 esito: result,
                 winner: check,
@@ -107,10 +105,10 @@ function checkWinner(){
                 player1: opponent,
                 player2: username,
             });
-            //aggiornaStorico(opponent,username);
             aggiornaClassifica();
 
         }
+
         //RESET VARIABILI
         check = "";
         opponent = "";
@@ -121,6 +119,7 @@ function checkWinner(){
         gameDiv.style.display = 'none';
         gameMessage.style.display = 'none';
         result = "";
+
         let messageList = document.getElementById('messages');
         while (messageList.firstChild) {
             messageList.removeChild(messageList.firstChild);
@@ -128,15 +127,14 @@ function checkWinner(){
     }
 }
 
-//PULISCE LA CELLA
+//pulizia cella
 function clear(cell){
     cell.style.backgroundColor = "#007BFF"
 cell.innerHTML = "";
 }
 
-//PULISCE LA TABELLA ALLA FINE DELLA PARTITA
+//pulizia tabella a fine partita
 function clearAll(){
-    //TODO: RIMETTERE DIV LOBBY, SOCKET PER CLASSIFICA VEDERE CHI LA INVIA E NEL SERVER LASCIARE LA ROOM
     clear(c0);
     clear(c1);
     clear(c2);
@@ -149,7 +147,7 @@ function clearAll(){
 }
 
 
-//AGGIUNGO EVENTO CLICK
+//evento click
 addClick(c0);
 addClick(c1);
 addClick(c2);
@@ -160,13 +158,11 @@ addClick(c6);
 addClick(c7);
 addClick(c8);
 
+
 function aggiornaClassifica()
 {
-    console.log('start aggiorna classifica');
-
     socket.emit('classifica', {
         blank: "",
     });
 
-    console.log('end aggiorna classifica');
 }
