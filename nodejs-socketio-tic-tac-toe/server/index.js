@@ -348,15 +348,16 @@ function executeServer()
           function getUserStatistics(username) {
               var query = "SELECT id , first_user, second_user, result_first_user, DATE_FORMAT(date, '%M %d %Y') AS date, result_second_user FROM history WHERE history.first_user = '" + username + "' OR history.second_user = '" + username + "' ORDER BY id DESC LIMIT 10";
               console.log(query);
+              var socketUser = onlineUser[username].userSocket;
               connection.query(query, function (error, rows, field) {
                       if (error) {
-                          io.to(socket.id).emit('storico', {
+                          io.to(socketUser.id).emit('storico', {
                               status: false,
                           });
                           console.log('Server - get storico Error in the Query '+error);
                       } else {
                           console.log(rows);
-                          io.sockets.emit('storico', {
+                          io.to(socketUser.id).emit('storico', {
                               status: true,
                               rows: rows,
                               username : username,
