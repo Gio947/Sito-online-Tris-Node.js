@@ -350,20 +350,17 @@ function executeServer()
               console.log(query);
               connection.query(query, function (error, rows, field) {
                       if (error) {
+                          io.to(socket.id).emit('storico', {
+                              status: false,
+                          });
                           console.log('Server - get storico Error in the Query '+error);
                       } else {
                           console.log(rows);
-                          if (rows.length > 0) {
-                              io.sockets.emit('storico', {
-                                  status: true,
-                                  rows: rows,
-                                  username : username,
-                              });
-                          } else {
-                              io.to(socket.id).emit('storico', {
-                                  status: false,
-                              });
-                          }
+                          io.sockets.emit('storico', {
+                              status: true,
+                              rows: rows,
+                              username : username,
+                          });
                       }
                   });
           }
