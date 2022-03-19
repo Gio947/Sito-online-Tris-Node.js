@@ -174,9 +174,11 @@ socket.on('storico', function(data){ //dalle socket prendo quella con evento 'lo
      var cell1 = rowHead.insertCell(0);
      var cell2 = rowHead.insertCell(1);
      var cell3 = rowHead.insertCell(2);
+     var cell4 = rowHead.insertCell(3);
      cell1.innerHTML = "IL TUO PROFILO";
      cell2.innerHTML = "AVVERSARIO";
      cell3.innerHTML = "RISULTATO";
+     cell4.innerHTML = "DATA PARTITA";
 
     var rows = data.rows;
     var currentUser = data.username;
@@ -189,15 +191,11 @@ socket.on('storico', function(data){ //dalle socket prendo quella con evento 'lo
             var row = tbody.insertRow(numberRow);
             var profile = row.insertCell(numberRow);
             var opponent =  row.insertCell(numberRow);
-          //  var data =  row.insertCell(numberRow);
             var risultato =  row.insertCell(numberRow);
+            var data =  row.insertCell(numberRow);
             //avversario
             var result = "";
             var opponent_string = "";
-
-            console.log(rows[i].first_user);
-            console.log(rows[i].second_user);
-            console.log(username);
 
             if(username == rows[i].first_user)
             {
@@ -213,8 +211,7 @@ socket.on('storico', function(data){ //dalle socket prendo quella con evento 'lo
 
             profile.innerHTML = username;
             opponent.innerHTML = opponent_string;
-            var dateToSubString = rows[i].date;
-            //data.innerHTML = dateToSubString.substring(0, 10);
+            data.innerHTML = rows[i].date;
 
             if(result == 1)
             {
@@ -389,7 +386,7 @@ socket.on('search', function(data){
     var cell3 = row.insertCell(2);
     cell1.innerHTML = opponent;
     cell2.innerHTML = result;
-    cell3.innerHTML = date.substring(0, 10);
+    cell3.innerHTML = date;
   }
 
  }
