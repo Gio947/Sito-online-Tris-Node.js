@@ -244,7 +244,7 @@ function executeServer()
               updateLastMatch(data.player1);
               updateLastMatch(data.player2);
 
-              console.log("socket per aggionrmento storico inviate");
+              console.log("socket per aggiornamento storico inviate");
               //getUserStatistics();
           });
 
@@ -360,7 +360,7 @@ function executeServer()
                                   username : username,
                               });
                           } else {
-                              io.sockets.emit(socket.id).emit('storico', {
+                              io.to(socket.id).emit('storico', {
                                   status: false,
                               });
                           }
@@ -442,23 +442,23 @@ function executeServer()
 
   socket.on('classifica', function(data) {
 
-  var query = "SELECT * FROM trisonline_esame.score order by win asc";
-  console.log(query);
-  connection.query(query, function(error, rows, field) {
-      if (error) {
-          console.log('Server - get search Error in the Query ' + error);
-          io.sockets.emit(socket.id).emit('classifica', {
-              status: false,
-          });
+      var query = "SELECT * FROM trisonline_esame.score order by win asc";
+      console.log(query);
+      connection.query(query, function(error, rows, field) {
+          if (error) {
+              console.log('Server - get search Error in the Query ' + error);
+              io.sockets.emit('classifica', {
+                  status: false,
+              });
 
-      } else {
-          console.log(rows);
-          io.sockets.emit('classifica', {
-              status: true,
-              rows: rows,
-          });
-      }
-  });
+          } else {
+              console.log(rows);
+              io.sockets.emit('classifica', {
+                  status: true,
+                  rows: rows,
+              });
+          }
+      });
  });
 
 });

@@ -40,7 +40,6 @@ socket.on('chat message', function(message) {
   window.scrollTo(0, document.body.scrollHeight);
 });
 
-
 socket.on('mossa', function(data){
     myCella = document.getElementById(data.idCella);
     myCella.style.backgroundColor = "#007BFF";
@@ -113,23 +112,19 @@ function checkWinner(){
 
         }
         //RESET VARIABILI
-        check="";
-        opponent="";
+        check = "";
+        opponent = "";
         turno = false;
-        roomName="";
-        simbolo="";
+        roomName = "";
+        simbolo = "";
         lobbyDiv.style.display = 'inline';
         gameDiv.style.display = 'none';
         gameMessage.style.display = 'none';
-        result="";
+        result = "";
         let messageList = document.getElementById('messages');
         while (messageList.firstChild) {
             messageList.removeChild(messageList.firstChild);
         }
-
-
-
-
     }
 }
 
