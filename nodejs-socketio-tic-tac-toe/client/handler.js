@@ -1,6 +1,6 @@
 //Make connection
-var socket = io.connect('http://localhost:8080');//IN LOCALE
-//var socket = io.connect('https://trisonline.herokuapp.com'); //SU EROKU
+//var socket = io.connect('http://localhost:8080');//IN LOCALE
+var socket = io.connect('https://trisonline.herokuapp.com'); //SU EROKU
 //var username = document.getElementById('username');
 
 
