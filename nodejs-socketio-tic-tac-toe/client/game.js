@@ -1,125 +1,126 @@
-var c0 = document.getElementById("c0");
-var c1 = document.getElementById("c1");
-var c2 = document.getElementById("c2");
-var c3 = document.getElementById("c3");
-var c4 = document.getElementById("c4");
-var c5 = document.getElementById("c5");
-var c6 = document.getElementById("c6");
-var c7 = document.getElementById("c7");
-var c8 = document.getElementById("c8");
+//variabili per il controllo del tris
+var resultGame = "";
+var checkResult = "";
 
+//elementi del campo da gioco
+var cell0 = document.getElementById('cell0');
+var cell1 = document.getElementById('cell1');
+var cell2 = document.getElementById('cell2');
+var cell3 = document.getElementById('cell3');
+var cell4 = document.getElementById('cell4');
+var cell5 = document.getElementById('cell5');
+var cell6 = document.getElementById('cell6');
+var cell7 = document.getElementById('cell7');
+var cell8 = document.getElementById('cell8');
+
+//elementi per la chat
 var gameMessage = document.getElementById('gameMessage');
-var check = ""; //controllo il tris
-var result="";
 
-
-function addClick(cell){
-    cell.addEventListener('click', function(event) {
-        if(cell.textContent == "") {
-            if (turno == true && check =="") {//se è il mio turno e nessuno ha vinto
-                turno = false;
-                socket.emit('mossa', {
-                    roomName: roomName,
-                    idCella: cell.id,
-                    simbolo: simbolo,
-                });
-            } else
-                alert("Attendi il tuo turno per poter fare la tua mossa.");
-        }
-    });
-}
-
-//client che riceve un messaggio dal server
-socket.on('chat message', function(message) {
-  console.log("ho ricevuto un messaggio :" + message)
-  var item = document.createElement('li');
-  item.textContent = message;
-  messages.appendChild(item);
-  window.scrollTo(0, document.body.scrollHeight);
-});
-
-//ricezione mossa dal server
-socket.on('mossa', function(data){
+//socket in ascolto per ricevere la mossa del giocatore
+socket.on('mossa', function (data) {
     myCella = document.getElementById(data.idCella);
     myCella.innerHTML = data.simbolo;
 
-    if(data.simbolo !== simbolo){
-        turno = true;
+    if (data.simbolo !== symbol) {
+        round = true;
     }
-    //controllo se è presente un vincitore
-    checkWinner();
+    checkEndGame();
 });
 
-function checkDraw() {
-    if(check == "" && c0.textContent !== "" && c1.textContent !== "" && c2.textContent !== "" && c3.textContent !== "" && c4.textContent !== "" && c5.textContent !== "" && c6.textContent !== "" && c7.textContent !== "" && c8.textContent !== "" ){
-        check = "draw";
-    }
-}
+//client che riceve un messaggio dal server
+socket.on('chat message', function(message) {
+      console.log("ho ricevuto un messaggio :" + message)
+      var item = document.createElement('li');
+      item.textContent = message;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+});
 
+
+//controllo se un utente ha fatto tris
 function checkTris(){
-    //controllo esito partita
-    if(c0.textContent !== "" && c0.textContent == c1.textContent && c1.textContent == c2.textContent){
-        check = c0.textContent;
-    }else if(c3.textContent !== "" && c3.textContent == c4.textContent && c4.textContent == c5.textContent) {
-        check = c3.textContent;
-    }else if(c6.textContent !== "" && c6.textContent == c7.textContent && c7.textContent == c8.textContent){
-        check = c6.textContent;
-    }else if(c0.textContent !== "" && c0.textContent == c3.textContent && c3.textContent == c6.textContent){
-        check = c0.textContent;
-    }else if(c1.textContent !== "" && c1.textContent == c4.textContent && c4.textContent == c7.textContent){
-        check = c1.textContent;
-    }else if(c2.textContent !== "" && c2.textContent == c5.textContent && c5.textContent == c8.textContent){
-        check = c2.textContent;
-    }else if(c0.textContent !== "" && c0.textContent == c4.textContent && c4.textContent == c8.textContent){
-        check = c0.textContent;
-    }else if(c2.textContent !== "" && c2.textContent == c4.textContent && c4.textContent == c6.textContent){
-        check = c2.textContent;
+    if(cell0.textContent !== "" && cell0.textContent == cell1.textContent && cell1.textContent == cell2.textContent){
+        checkResult = cell0.textContent;
+    }else if(cell3.textContent !== "" && cell3.textContent == cell4.textContent && cell4.textContent == cell5.textContent) {
+        checkResult = cell3.textContent;
+    }else if(cell6.textContent !== "" && cell6.textContent == cell7.textContent && cell7.textContent == cell8.textContent){
+        checkResult = cell6.textContent;
+    }else if(cell0.textContent !== "" && cell0.textContent == cell3.textContent && cell3.textContent == cell6.textContent){
+        checkResult = cell0.textContent;
+    }else if(cell1.textContent !== "" && cell1.textContent == cell4.textContent && cell4.textContent == cell7.textContent){
+        checkResult = cell1.textContent;
+    }else if(cell2.textContent !== "" && cell2.textContent == cell5.textContent && cell5.textContent == cell8.textContent){
+        checkResult = cell2.textContent;
+    }else if(cell0.textContent !== "" && cell0.textContent == cell4.textContent && cell4.textContent == cell8.textContent){
+        checkResult = cell0.textContent;
+    }else if(cell2.textContent !== "" && cell2.textContent == cell4.textContent && cell4.textContent == cell6.textContent){
+        checkResult = cell2.textContent;
     }
 }
 
-function checkWinner(){
+//controllo della parità
+function tieCheck() {
+    if (checkResult == "" && cell0.textContent !== "" && cell1.textContent !== "" && cell2.textContent !== "" &&
+        cell3.textContent !== "" && cell4.textContent !== "" && cell5.textContent !== "" && cell6.textContent !== "" &&
+        cell7.textContent !== "" && cell8.textContent !== "") {
+        checkResult = "draw";
+    }
+}
+
+//controllo il risultato finale della partita
+function checkEndGame(){
     checkTris();
-    checkDraw();
-    if(check !== ""){
-        if(check == simbolo){
-            check = username;
-            result = "win";
+    tieCheck();
+    if(checkResult !== ""){
+        if(checkResult == symbol){
+            checkResult = username;
+            resultGame = "win";
             alert("Hai vinto!!!!");
         }
-        else if(check == "draw"){
-            check = opponent;
-            result = "draw";
+        else if(checkResult == "draw"){
+            checkResult = opponent;
+            resultGame = "draw";
             alert("La partita e' finita in pareggio");
         }
-        else if(check !== simbolo){
-            check=opponent;
-            result = "lose";
+        else if(checkResult !== symbol){
+            checkResult = opponent;
+            resultGame = "lose";
             alert("Sei stato sconfitto");
         }
-        clearAll();
-        if(turno == true){ //se qualcuno ha fatto tris invio una socket
+        
+        if (round == true) {
+            //emetto l'evento per il vincitore
             socket.emit('winner', {
-                esito: result,
-                winner: check,
+                esito: resultGame,
+                winner: checkResult,
                 roomName: roomName,
                 player1: opponent,
                 player2: username,
             });
             aggiornaClassifica();
-
         }
+        //svuoto il campo da gioco
+        clearCell(cell0);
+        clearCell(cell1);
+        clearCell(cell2);
+        clearCell(cell3);
+        clearCell(cell4);
+        clearCell(cell5);
+        clearCell(cell6);
+        clearCell(cell7);
+        clearCell(cell8);
 
-        //RESET VARIABILI
-        check = "";
-        opponent = "";
-        turno = false;
+        //si ritorna nella lobby
+        resultGame = "";
+        checkResult = "";
+        round = false;
+        symbol = "";
         roomName = "";
-        simbolo = "";
-        lobbyDiv.style.display = 'inline';
+        opponent = "";
+        lobbyDiv.style.display = 'block';
         gameDiv.style.display = 'none';
         gameMessage.style.display = 'none';
-        result = "";
-
+        
         let messageList = document.getElementById('messages');
         while (messageList.firstChild) {
             messageList.removeChild(messageList.firstChild);
@@ -127,42 +128,44 @@ function checkWinner(){
     }
 }
 
-//pulizia cella
-function clear(cell){
-    cell.style.backgroundColor = "#007BFF"
-cell.innerHTML = "";
+//svuoto la cella del campo
+function clearCell(cell) {
+    cell.innerHTML = "";
+    cell.style.backgroundColor = "#007BFF";
 }
 
-//pulizia tabella a fine partita
-function clearAll(){
-    clear(c0);
-    clear(c1);
-    clear(c2);
-    clear(c3);
-    clear(c4);
-    clear(c5);
-    clear(c6);
-    clear(c7);
-    clear(c8);
+//aggiungo l'evento alla cella del campo
+function addEventCell(cell) {
+    cell.addEventListener('click', function (event) {
+        if (cell.textContent == "") {
+            if (round == true && checkResult == "") {
+                round = false;
+                socket.emit('mossa', {
+                    roomName: roomName,
+                    idCella: cell.id,
+                    simbolo: symbol,
+                });
+            } else {
+                alert("Attendi il tuo round per poter fare la tua mossa.");
+            }
+        }
+    });
 }
 
+//aggiungo evento alle celle del campo
+addEventCell(cell0);
+addEventCell(cell1);
+addEventCell(cell2);
+addEventCell(cell3);
+addEventCell(cell4);
+addEventCell(cell5);
+addEventCell(cell6);
+addEventCell(cell7);
+addEventCell(cell8);
 
-//evento click
-addClick(c0);
-addClick(c1);
-addClick(c2);
-addClick(c3);
-addClick(c4);
-addClick(c5);
-addClick(c6);
-addClick(c7);
-addClick(c8);
-
-
-function aggiornaClassifica()
-{
+//funzione per aggiornare la classifica
+function aggiornaClassifica(){
     socket.emit('classifica', {
         blank: "",
     });
-
 }

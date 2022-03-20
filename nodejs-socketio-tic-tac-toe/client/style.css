@@ -44,8 +44,6 @@ select#slct {
     margin-top: -5vh;
 }
 
-
-/*BOTTONE SFIDA*/
 #btnSfida {
     background-color: #007BFF;
     border-radius: 4px;
@@ -126,12 +124,10 @@ select#slct {
 
 tr#resultHead {
     color: bisque;
-    /* background: gray; */
 }
 
 tr#resultHeadClassifica {
     color: bisque;
-    /* background: gray; */
 }
 
 tr#resultHeadHistory {
@@ -144,11 +140,9 @@ label {
 }
 
 input{
-
     margin:5px 17px;
     padding: 10px 10px;
     width:20%;
-
 }
 
 /*-------------------------- Game ---------------------*/
